@@ -709,6 +709,88 @@
             #restart-button:hover {
                 background: white;
             }
+        #highscore-box {
+            width: min(360px, 82vw);
+            margin-bottom: 18px;
+            font-family: "Courier New", monospace;
+            text-align: center;
+        }
+
+        #highscore-title {
+            font-size: 19px;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            color: #ddd;
+        }
+
+        #highscore-entry {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        #highscore-name {
+            flex: 1;
+            min-width: 0;
+            padding: 9px;
+            background: #111;
+            color: white;
+            border: 2px solid #777;
+            font-family: "Courier New", monospace;
+            text-transform: uppercase;
+        }
+
+        #highscore-submit {
+            padding: 8px 10px;
+            background: #ddd;
+            color: black;
+            border: 2px solid #555;
+            font-family: "Courier New", monospace;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+            #highscore-submit:disabled {
+                opacity: 0.45;
+            }
+
+        #highscore-message {
+            min-height: 18px;
+            margin-bottom: 6px;
+            color: #999;
+            font-size: 11px;
+        }
+
+        #highscore-list {
+            border-top: 1px solid #555;
+            padding-top: 7px;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #ccc;
+        }
+
+        .highscore-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .highscore-rank {
+            width: 25px;
+            text-align: left;
+        }
+
+        .highscore-player {
+            flex: 1;
+            text-align: left;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .highscore-points {
+            text-align: right;
+        }
 
 
         /* =========================================================
@@ -1392,7 +1474,32 @@
                 <div id="game-over-subtitle">
                     DAS WAR UNGESCHICKT.
                 </div>
+                <div id="highscore-box">
 
+                    <div id="highscore-title">
+                        BESTENLISTE
+                    </div>
+
+                    <div id="highscore-entry">
+
+                        <input id="highscore-name"
+                               type="text"
+                               maxlength="16"
+                               placeholder="DEIN NAME">
+
+                        <button id="highscore-submit">
+                            SCORE SPEICHERN
+                        </button>
+
+                    </div>
+
+                    <div id="highscore-message"></div>
+
+                    <div id="highscore-list">
+                        Lade Bestenliste...
+                    </div>
+
+                </div>
                 <button id="restart-button">
                     NOCHMAL
                 </button>
@@ -1538,7 +1645,22 @@
          JAVASCRIPT
          ===================================================== -->
 
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
+
+        const SUPABASE_URL =
+            "https://nhmiiaospvtqpaxqquzc.supabase.co";
+
+        const SUPABASE_KEY =
+            "sb_publishable_-fXDDREih0dEmFw0iCxprQ_kMV0ADxd";
+
+        const supabaseClient =
+            supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
+            );
 
 
         /* =====================================================
@@ -2038,6 +2160,34 @@
             document.getElementById(
                 "game-over-subtitle"
             );
+
+        const highscoreBox =
+            document.getElementById(
+                "highscore-box"
+            );
+
+        const highscoreName =
+            document.getElementById(
+                "highscore-name"
+            );
+
+        const highscoreSubmit =
+            document.getElementById(
+                "highscore-submit"
+            );
+
+        const highscoreMessage =
+            document.getElementById(
+                "highscore-message"
+            );
+
+        const highscoreList =
+            document.getElementById(
+                "highscore-list"
+            );
+
+        let scoreSubmitted =
+            false;
 
 
         let currentLane = 1;
@@ -3336,6 +3486,219 @@ RAKETE ABSCHIESSEN
 
         }
 
+        async function loadHighscores() {
+
+            highscoreList.textContent =
+                "Lade Bestenliste...";
+
+            const {
+                data,
+                error
+            } =
+                await supabaseClient
+                    .from("highscores")
+                    .select("name, score")
+                    .order(
+                        "score",
+                        {
+                            ascending: false
+                        }
+                    )
+                    .limit(5);
+
+
+            if (error) {
+
+                console.error(error);
+
+                highscoreList.textContent =
+                    "BESTENLISTE NICHT ERREICHBAR";
+
+                return;
+
+            }
+
+
+            if (
+                !data
+                ||
+                data.length === 0
+            ) {
+
+                highscoreList.textContent =
+                    "NOCH KEINE SCORES";
+
+                return;
+
+            }
+
+
+            highscoreList.innerHTML =
+                "";
+
+
+            data.forEach(
+                function (
+                    entry,
+                    index
+                ) {
+
+                    const row =
+                        document.createElement(
+                            "div"
+                        );
+
+                    row.className =
+                        "highscore-row";
+
+
+                    const rank =
+                        document.createElement(
+                            "span"
+                        );
+
+                    rank.className =
+                        "highscore-rank";
+
+                    rank.textContent =
+                        (index + 1)
+                        +
+                        ".";
+
+
+                    const player =
+                        document.createElement(
+                            "span"
+                        );
+
+                    player.className =
+                        "highscore-player";
+
+                    player.textContent =
+                        entry.name;
+
+
+                    const points =
+                        document.createElement(
+                            "span"
+                        );
+
+                    points.className =
+                        "highscore-points";
+
+                    points.textContent =
+                        entry.score;
+
+
+                    row.appendChild(
+                        rank
+                    );
+
+                    row.appendChild(
+                        player
+                    );
+
+                    row.appendChild(
+                        points
+                    );
+
+
+                    highscoreList.appendChild(
+                        row
+                    );
+
+                }
+            );
+
+        }
+
+
+        async function submitHighscore() {
+
+            if (
+                gameMode !== "endless"
+                ||
+                scoreSubmitted
+            ) {
+
+                return;
+
+            }
+
+
+            const name =
+                highscoreName
+                    .value
+                    .trim()
+                    .toUpperCase();
+
+
+            if (!name) {
+
+                highscoreMessage.textContent =
+                    "NAME FEHLT.";
+
+                return;
+
+            }
+
+
+            highscoreSubmit.disabled =
+                true;
+
+            highscoreMessage.textContent =
+                "SPEICHERE...";
+
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .from("highscores")
+                    .insert({
+                        name:
+                            name,
+
+                        score:
+                            endlessScore
+                    });
+
+
+            if (error) {
+
+                console.error(error);
+
+                highscoreMessage.textContent =
+                    "FEHLER BEIM SPEICHERN.";
+
+                highscoreSubmit.disabled =
+                    false;
+
+                return;
+
+            }
+
+
+            scoreSubmitted =
+                true;
+
+            highscoreMessage.textContent =
+                "SCORE GESPEICHERT.";
+
+            localStorage.setItem(
+                "dritteljahrhundertName",
+                name
+            );
+
+
+            await loadHighscores();
+
+        }
+
+        highscoreSubmit.addEventListener(
+            "click",
+            submitHighscore
+        );
 
         function triggerGameOver() {
 
@@ -3391,6 +3754,31 @@ RAKETE ABSCHIESSEN
                     endlessScore
                     +
                     " PUNKTE";
+                highscoreBox.style.display =
+                    "block";
+
+                scoreSubmitted =
+                    false;
+
+                highscoreSubmit.disabled =
+                    false;
+
+                highscoreMessage.textContent =
+                    "";
+
+                const savedName =
+                    localStorage.getItem(
+                        "dritteljahrhundertName"
+                    );
+
+                if (savedName) {
+
+                    highscoreName.value =
+                        savedName;
+
+                }
+
+                loadHighscores();
 
             }
 
@@ -3398,6 +3786,8 @@ RAKETE ABSCHIESSEN
 
                 gameOverSubtitle.textContent =
                     "DAS WAR UNGESCHICKT.";
+                highscoreBox.style.display =
+                    "none";
 
             }
 
@@ -3701,7 +4091,7 @@ sobald das Hindernis ins Bild kommt
                 }
 
                 /*
-    AUTOKOLLISION
+AUTOKOLLISION
 */
 
                 if (
@@ -4345,8 +4735,8 @@ sobald das Hindernis ins Bild kommt
             );
 
             /*
-    Bremsgeräusch kurz bevor
-    das Auto zum Stehen kommt
+Bremsgeräusch kurz bevor
+das Auto zum Stehen kommt
 */
 
             setTimeout(
@@ -4467,7 +4857,6 @@ sobald das Hindernis ins Bild kommt
 
             }
         );
-
 
     </script>
 
