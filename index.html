@@ -2679,6 +2679,9 @@ muss mindestens EIN stummes Hindernis kommen.
                     *
                     80,
 
+                lane:
+                    lane,
+
                 type:
                     obstacleType.name,
 
@@ -3691,15 +3694,55 @@ sobald das Hindernis ins Bild kommt
 
 
                 if (
-                    carHitsObstacle(
-                        playerRect,
-                        obstacleRect
-                    )
+                    obstacle.lane
+                    ===
+                    currentLane
                 ) {
 
-                    triggerGameOver();
+                    const playerTop =
+                        playerRect.top
+                        +
+                        playerRect.height * 0.15;
 
-                    return;
+                    const playerBottom =
+                        playerRect.bottom
+                        -
+                        playerRect.height * 0.15;
+
+                    const obstacleTop =
+                        obstacleRect.top
+                        +
+                        obstacleRect.height * 0.12;
+
+                    const obstacleBottom =
+                        obstacleRect.bottom
+                        -
+                        obstacleRect.height * 0.12;
+
+
+                    const verticalCollision =
+                        !(
+                            playerBottom
+                            <
+                            obstacleTop
+
+                            ||
+
+                            playerTop
+                            >
+                            obstacleBottom
+                        );
+
+
+                    if (
+                        verticalCollision
+                    ) {
+
+                        triggerGameOver();
+
+                        return;
+
+                    }
 
                 }
 
