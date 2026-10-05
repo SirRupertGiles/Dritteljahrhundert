@@ -614,7 +614,8 @@
             position: absolute;
             width: 68px;
             height: 74px;
-            top: -100px;
+            top: 0;
+            will-change: transform;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -1131,14 +1132,14 @@
             }
 
             #jonathan {
-                left: 15px;
-                transform: scale(0.8);
+                left: 5px;
+                transform: scale(0.58);
                 transform-origin: bottom left;
             }
 
             #car-wrap {
-                right: 0;
-                transform: scale(0.75);
+                right: -40px;
+                transform: scale(0.55);
                 transform-origin: bottom right;
             }
 
@@ -1152,21 +1153,53 @@
             }
 
             #arrival-stage {
-                height: 70vh;
+                height: 70svh;
             }
 
             #arrival-house {
-                width: 78vw;
-                right: -10vw;
+                width: 82%;
+                right: -8%;
+                bottom: 20px;
             }
 
             #arrival-car {
-                transform: scale(0.7);
+                transform: scale(0.62);
                 transform-origin: bottom left;
+                bottom: 28px;
             }
 
             #arrival-jonathan {
+                left: 95px;
+                bottom: 38px;
+                transform: scale(0.58);
                 transform-origin: bottom left;
+            }
+
+                #arrival-jonathan.walk-house {
+                    animation: walkToHouseMobile 2s forwards ease-in-out;
+                }
+
+            @keyframes walkToHouseMobile {
+
+                0% {
+                    transform: translateX(0) scale(0.58) rotate(0deg);
+                }
+
+                25% {
+                    transform: translateX(20px) scale(0.58) rotate(3deg);
+                }
+
+                50% {
+                    transform: translateX(40px) scale(0.58) rotate(-3deg);
+                }
+
+                75% {
+                    transform: translateX(60px) scale(0.58) rotate(3deg);
+                }
+
+                100% {
+                    transform: translateX(75px) scale(0.58) rotate(0deg);
+                }
             }
         }
     </style>
@@ -2978,6 +3011,13 @@ RAKETE ABSCHIESSEN
                 activeRocket.element
                     .getBoundingClientRect();
 
+            const roadHeight =
+                road.clientHeight;
+
+            const obstacleSpeedMultiplier =
+                getAreaSpeedMultiplier()
+                *
+                getRoadSpeedMultiplier();
 
             for (
                 let i =
@@ -3617,16 +3657,16 @@ AREA SYSTEM
                 obstacle.y +=
                     obstacle.speed
                     *
-                    getAreaSpeedMultiplier()
-                    *
-                    getRoadSpeedMultiplier()
+                    obstacleSpeedMultiplier
                     *
                     delta;
 
-                obstacle.element.style.top =
+                obstacle.element.style.transform =
+                    "translate3d(0, "
+                    +
                     obstacle.y
                     +
-                    "px";
+                    "px, 0) rotate(2deg)";
 
                 /*
 Sound starten,
@@ -3662,7 +3702,7 @@ sobald das Hindernis ins Bild kommt
                 ) {
 
                     const playerTop =
-                        road.clientHeight
+                        roadHeight
                         -
                         22
                         -
@@ -3671,7 +3711,7 @@ sobald das Hindernis ins Bild kommt
                         18;
 
                     const playerBottom =
-                        road.clientHeight
+                        roadHeight
                         -
                         22
                         -
@@ -3707,7 +3747,7 @@ sobald das Hindernis ins Bild kommt
                 if (
                     obstacle.y
                     >
-                    road.clientHeight
+                    roadHeight
                     +
                     120
                 ) {
