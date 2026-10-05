@@ -3293,7 +3293,59 @@ RAKETE ABSCHIESSEN
 
         }
 
+        function carHitsObstacle(
+            playerRect,
+            obstacleRect
+        ) {
 
+            /*
+                Hitbox des Autos etwas kleiner
+            */
+
+            const playerInsetX =
+                playerRect.width * 0.18;
+
+            const playerInsetY =
+                playerRect.height * 0.12;
+
+
+            /*
+                Hindernisse deutlich kleiner,
+                weil die PNGs oft transparenten Rand haben
+            */
+
+            const obstacleInsetX =
+                obstacleRect.width * 0.22;
+
+            const obstacleInsetY =
+                obstacleRect.height * 0.16;
+
+
+            return !(
+                playerRect.right - playerInsetX
+                <
+                obstacleRect.left + obstacleInsetX
+
+                ||
+
+                playerRect.left + playerInsetX
+                >
+                obstacleRect.right - obstacleInsetX
+
+                ||
+
+                playerRect.bottom - playerInsetY
+                <
+                obstacleRect.top + obstacleInsetY
+
+                ||
+
+                playerRect.top + playerInsetY
+                >
+                obstacleRect.bottom - obstacleInsetY
+            );
+
+        }
 
         function triggerGameOver() {
 
@@ -3639,7 +3691,7 @@ sobald das Hindernis ins Bild kommt
 
 
                 if (
-                    rectanglesTouch(
+                    carHitsObstacle(
                         playerRect,
                         obstacleRect
                     )
