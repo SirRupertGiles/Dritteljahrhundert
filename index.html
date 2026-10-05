@@ -1183,22 +1183,27 @@
 
                 0% {
                     transform: translateX(0) scale(0.58) rotate(0deg);
+                    opacity: 1;
                 }
 
-                25% {
-                    transform: translateX(20px) scale(0.58) rotate(3deg);
+                30% {
+                    transform: translateX(15px) scale(0.56) rotate(3deg);
+                    opacity: 1;
                 }
 
-                50% {
-                    transform: translateX(40px) scale(0.58) rotate(-3deg);
+                60% {
+                    transform: translateX(30px) scale(0.52) rotate(-3deg);
+                    opacity: 1;
                 }
 
-                75% {
-                    transform: translateX(60px) scale(0.58) rotate(3deg);
+                80% {
+                    transform: translateX(42px) scale(0.46) rotate(2deg);
+                    opacity: 0.65;
                 }
 
                 100% {
-                    transform: translateX(75px) scale(0.58) rotate(0deg);
+                    transform: translateX(48px) translateY(-8px) scale(0.38) rotate(0deg);
+                    opacity: 0;
                 }
             }
         }
@@ -3011,13 +3016,6 @@ RAKETE ABSCHIESSEN
                 activeRocket.element
                     .getBoundingClientRect();
 
-            const roadHeight =
-                road.clientHeight;
-
-            const obstacleSpeedMultiplier =
-                getAreaSpeedMultiplier()
-                *
-                getRoadSpeedMultiplier();
 
             for (
                 let i =
@@ -3639,6 +3637,17 @@ AREA SYSTEM
 
 
             /* Bewegung */
+
+
+            /* Bewegung */
+
+            const roadHeight =
+                road.clientHeight;
+
+            const obstacleSpeedMultiplier =
+                getAreaSpeedMultiplier()
+                *
+                getRoadSpeedMultiplier();
 
 
             for (
