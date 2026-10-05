@@ -568,7 +568,6 @@
             bottom: 22px;
             left: 37.5%;
             transform: translateX(-50%);
-            transition: left 0.12s ease-out;
             z-index: 10;
         }
 
@@ -1144,7 +1143,7 @@
             }
 
             #game-road {
-                height: 63vh;
+                height: min( 650px, calc(100svh - 175px) );
             }
 
             .game-arrow {
@@ -2682,6 +2681,9 @@ muss mindestens EIN stummes Hindernis kommen.
                 lane:
                     lane,
 
+                height:
+                    obstacleType.height,
+
                 type:
                     obstacleType.name,
 
@@ -3296,59 +3298,6 @@ RAKETE ABSCHIESSEN
 
         }
 
-        function carHitsObstacle(
-            playerRect,
-            obstacleRect
-        ) {
-
-            /*
-                Hitbox des Autos etwas kleiner
-            */
-
-            const playerInsetX =
-                playerRect.width * 0.18;
-
-            const playerInsetY =
-                playerRect.height * 0.12;
-
-
-            /*
-                Hindernisse deutlich kleiner,
-                weil die PNGs oft transparenten Rand haben
-            */
-
-            const obstacleInsetX =
-                obstacleRect.width * 0.22;
-
-            const obstacleInsetY =
-                obstacleRect.height * 0.16;
-
-
-            return !(
-                playerRect.right - playerInsetX
-                <
-                obstacleRect.left + obstacleInsetX
-
-                ||
-
-                playerRect.left + playerInsetX
-                >
-                obstacleRect.right - obstacleInsetX
-
-                ||
-
-                playerRect.bottom - playerInsetY
-                <
-                obstacleRect.top + obstacleInsetY
-
-                ||
-
-                playerRect.top + playerInsetY
-                >
-                obstacleRect.bottom - obstacleInsetY
-            );
-
-        }
 
         function triggerGameOver() {
 
@@ -3454,6 +3403,23 @@ AREA SYSTEM
 
         }
 
+        function getRoadSpeedMultiplier() {
+
+            const referenceHeight =
+                650;
+
+            return Math.max(
+                0.75,
+
+                Math.min(
+                    1,
+                    road.clientHeight
+                    /
+                    referenceHeight
+                )
+            );
+
+        }
 
         function playAreaMusic(area) {
 
@@ -3634,10 +3600,6 @@ AREA SYSTEM
 
             /* Bewegung */
 
-            const playerRect =
-                playerCar
-                    .getBoundingClientRect();
-
 
             for (
                 let i =
@@ -3656,6 +3618,8 @@ AREA SYSTEM
                     obstacle.speed
                     *
                     getAreaSpeedMultiplier()
+                    *
+                    getRoadSpeedMultiplier()
                     *
                     delta;
 
@@ -3687,11 +3651,9 @@ sobald das Hindernis ins Bild kommt
 
                 }
 
-
-                const obstacleRect =
-                    obstacle.element
-                        .getBoundingClientRect();
-
+                /*
+    AUTOKOLLISION
+*/
 
                 if (
                     obstacle.lane
@@ -3700,42 +3662,37 @@ sobald das Hindernis ins Bild kommt
                 ) {
 
                     const playerTop =
-                        playerRect.top
+                        road.clientHeight
+                        -
+                        22
+                        -
+                        110
                         +
-                        playerRect.height * 0.15;
+                        18;
 
                     const playerBottom =
-                        playerRect.bottom
+                        road.clientHeight
                         -
-                        playerRect.height * 0.15;
+                        22
+                        -
+                        18;
+
 
                     const obstacleTop =
-                        obstacleRect.top
+                        obstacle.y
                         +
-                        obstacleRect.height * 0.12;
+                        obstacle.height * 0.18;
 
                     const obstacleBottom =
-                        obstacleRect.bottom
-                        -
-                        obstacleRect.height * 0.12;
-
-
-                    const verticalCollision =
-                        !(
-                            playerBottom
-                            <
-                            obstacleTop
-
-                            ||
-
-                            playerTop
-                            >
-                            obstacleBottom
-                        );
+                        obstacle.y
+                        +
+                        obstacle.height * 0.82;
 
 
                     if (
-                        verticalCollision
+                        playerBottom >= obstacleTop
+                        &&
+                        playerTop <= obstacleBottom
                     ) {
 
                         triggerGameOver();
