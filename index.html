@@ -1,0 +1,4374 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dritteljahrhundert</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .scene {
+            position: relative;
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .scene.active {
+                display: flex;
+            }
+
+
+        /* =========================================================
+           SZENE 1 – TÜR
+           ========================================================= */
+
+        #scene-door {
+            background: #050505;
+        }
+
+        #door-frame {
+            position: relative;
+            width: 300px;
+            height: 500px;
+            background: black;
+            perspective: 1000px;
+        }
+
+        #door {
+            width: 100%;
+            height: 100%;
+            background: #4b2a17;
+            border: 10px solid #24140c;
+            cursor: pointer;
+            transform-origin: left center;
+            transition: transform 1.5s;
+        }
+
+            #door.open {
+                transform: rotateY(-100deg);
+            }
+
+        #message {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 32px;
+            letter-spacing: 4px;
+            z-index: -1;
+        }
+
+        #hint {
+            position: fixed;
+            bottom: 30px;
+            font-size: 16px;
+            color: #999;
+        }
+
+        #hell-door-screen {
+            display: none;
+            min-height: 100vh;
+            background: #000;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+            #hell-door-screen.active {
+                display: flex;
+            }
+
+        .hell-door-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+        }
+
+        #hell-door-image {
+            width: min(82vw, 420px);
+            height: auto;
+            display: block;
+            image-rendering: auto;
+            filter: contrast(1.02);
+        }
+
+
+        /* =========================================================
+           SZENE 2 – MÜNSTER
+           ========================================================= */
+
+        #scene-intro {
+            background: black;
+            flex-direction: column;
+        }
+
+        #intro-stage {
+            position: relative;
+            width: 950px;
+            max-width: 95vw;
+            height: 540px;
+            max-height: 78vh;
+            border: 4px solid #1f1f1f;
+            background: linear-gradient( to bottom, #050505, #0c0c0c );
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+        }
+
+            #intro-stage::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: repeating-linear-gradient( to bottom, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px );
+                pointer-events: none;
+                opacity: 0.25;
+                z-index: 20;
+            }
+
+            #intro-stage::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: radial-gradient( circle at 20% 30%, rgba(255,255,255,0.05), transparent 20% ), radial-gradient( circle at 80% 20%, rgba(255,255,255,0.04), transparent 18% );
+                pointer-events: none;
+                animation: flickerStage 2.5s infinite;
+                z-index: 19;
+            }
+
+        @keyframes flickerStage {
+            0%, 100% {
+                opacity: 0.18;
+            }
+
+            50% {
+                opacity: 0.32;
+            }
+        }
+
+        #muenster-label {
+            position: absolute;
+            left: 25px;
+            top: 20px;
+            font-size: 26px;
+            letter-spacing: 3px;
+            color: #8f8f8f;
+            transform: rotate(-3deg);
+            border: 2px dashed #444;
+            padding: 8px 14px;
+            background: rgba(20,20,20,0.6);
+            z-index: 2;
+        }
+
+
+        /* =========================================================
+           SPRECHBLASE MÜNSTER
+           ========================================================= */
+
+        #speech {
+            position: absolute;
+            top: 28px;
+            left: 50%;
+            width: 68%;
+            max-width: 620px;
+            padding: 14px 20px;
+            background: white;
+            color: black;
+            border: 5px solid black;
+            font-size: 22px;
+            line-height: 1.3;
+            text-align: center;
+            box-shadow: 8px 8px 0 #222;
+            transform: translateX(-50%) rotate(-1deg);
+            animation: speechJitter 2s infinite;
+            z-index: 10;
+        }
+
+        @keyframes speechJitter {
+            0% {
+                transform: translateX(-50%) rotate(-1deg);
+            }
+
+            50% {
+                transform: translateX(-50%) rotate(1deg) translateY(1px);
+            }
+
+            100% {
+                transform: translateX(-50%) rotate(-1deg);
+            }
+        }
+
+
+        /* =========================================================
+           JONATHAN INTRO
+           ========================================================= */
+
+        #jonathan {
+            position: absolute;
+            left: 95px;
+            bottom: 28px;
+            width: 220px;
+            height: 330px;
+            z-index: 4;
+        }
+
+        #jonathan-body-img {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 205px;
+            z-index: 1;
+            animation: bodyShift 1.8s infinite ease-in-out;
+        }
+
+        #jonathan-head-img {
+            position: absolute;
+            width: 112px;
+            left: 46px;
+            top: -8px;
+            z-index: 3;
+            transform-origin: center bottom;
+            animation: headWobble 1.6s infinite ease-in-out;
+        }
+
+        @keyframes headWobble {
+            0% {
+                transform: rotate(-4deg);
+            }
+
+            50% {
+                transform: rotate(3deg) translateY(-2px);
+            }
+
+            100% {
+                transform: rotate(-4deg);
+            }
+        }
+
+        @keyframes bodyShift {
+            0% {
+                transform: rotate(1deg);
+            }
+
+            50% {
+                transform: rotate(-1deg) translateY(2px);
+            }
+
+            100% {
+                transform: rotate(1deg);
+            }
+        }
+
+
+        /* =========================================================
+           JONATHAN STEIGT EIN
+           ========================================================= */
+
+        #jonathan.entering-car {
+            animation: enterCar 1.25s forwards ease-in;
+        }
+
+        @keyframes enterCar {
+            0% {
+                transform: translateX(0) translateY(0) scale(1);
+            }
+
+            70% {
+                transform: translateX(350px) translateY(15px) scale(0.95);
+            }
+
+            100% {
+                transform: translateX(425px) translateY(25px) scale(0.82);
+            }
+        }
+
+        #jonathan.hidden {
+            display: none;
+        }
+
+
+        /* =========================================================
+           INTRO-AUTO
+           ========================================================= */
+
+        #car-wrap {
+            position: absolute;
+            right: 70px;
+            bottom: 68px;
+            width: 360px;
+            height: 220px;
+            z-index: 3;
+        }
+
+        #car-img {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 360px;
+            z-index: 2;
+            animation: carShake 1.2s infinite ease-in-out;
+        }
+
+        @keyframes carShake {
+            0% {
+                transform: rotate(-1deg);
+            }
+
+            50% {
+                transform: rotate(1deg) translateY(-1px);
+            }
+
+            100% {
+                transform: rotate(-1deg);
+            }
+        }
+
+        #driver-head {
+            position: absolute;
+            width: 62px;
+            left: 207px;
+            top: 56px;
+            z-index: 3;
+            display: none;
+            transform: rotate(-4deg);
+        }
+
+            #driver-head.visible {
+                display: block;
+                animation: driverWobble 0.9s infinite ease-in-out;
+            }
+
+        @keyframes driverWobble {
+            0% {
+                transform: rotate(-4deg);
+            }
+
+            50% {
+                transform: rotate(2deg) translateY(-2px);
+            }
+
+            100% {
+                transform: rotate(-4deg);
+            }
+        }
+
+        #car-noise {
+            position: absolute;
+            right: 8px;
+            top: 8px;
+            color: #9a9a9a;
+            font-size: 22px;
+            letter-spacing: 2px;
+            z-index: 4;
+            animation: noiseShake 0.9s infinite;
+        }
+
+        @keyframes noiseShake {
+            0% {
+                transform: rotate(8deg);
+            }
+
+            50% {
+                transform: rotate(6deg) translateX(2px);
+            }
+
+            100% {
+                transform: rotate(8deg);
+            }
+        }
+
+        #car-wrap.drive-away {
+            animation: driveAway 1.5s forwards ease-in;
+        }
+
+        @keyframes driveAway {
+            0% {
+                transform: translateX(0);
+            }
+
+            20% {
+                transform: translateX(-15px);
+            }
+
+            100% {
+                transform: translateX(700px);
+            }
+        }
+
+        #ground-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 56px;
+            height: 3px;
+            background: #2d2d2d;
+            z-index: 1;
+        }
+
+        #intro-button {
+            margin-top: 22px;
+            padding: 16px 28px;
+            font-size: 22px;
+            background: #1f1f1f;
+            color: white;
+            border: 3px solid #666;
+            cursor: pointer;
+            letter-spacing: 2px;
+            box-shadow: 5px 5px 0 #111;
+        }
+
+
+        /* =========================================================
+           SZENE 3 – MINIGAME
+           ========================================================= */
+
+        #scene-game {
+            background: #020202;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #game-top {
+            width: min(480px, 90vw);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            color: #aaa;
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            letter-spacing: 1px;
+        }
+
+        #progress-shell {
+            width: min(480px, 90vw);
+            height: 12px;
+            border: 2px solid #777;
+            margin-bottom: 8px;
+            background: #111;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: #aaa;
+        }
+
+
+        /* =========================================================
+           STRASSE
+           ========================================================= */
+
+        #game-road {
+            position: relative;
+            width: min(480px, 90vw);
+            height: min(650px, 67vh);
+            overflow: hidden;
+            background: #292929;
+            border-left: 9px solid #777;
+            border-right: 9px solid #777;
+            box-shadow: 0 0 35px black;
+        }
+
+        /* =========================================================
+   ENDLESS AREAS
+   ========================================================= */
+
+        #game-road {
+            transition: filter 1.2s ease;
+        }
+
+            /* AREA 1 – normal */
+            #game-road.area-1 {
+                filter: none;
+            }
+
+            /* AREA 2 – rosa / liminal / kaputt */
+            #game-road.area-2 {
+                filter: sepia(0.9) saturate(2.7) hue-rotate(295deg) brightness(0.92) contrast(1.08);
+            }
+
+            /* AREA 3 – grüner Fiebertraum */
+            #game-road.area-3 {
+                filter: sepia(0.95) saturate(3.2) hue-rotate(65deg) brightness(0.9) contrast(1.12);
+            }
+
+        .lane-line {
+            position: absolute;
+            top: -100px;
+            bottom: -100px;
+            width: 4px;
+            background: repeating-linear-gradient( to bottom, #bdbdbd 0px, #bdbdbd 24px, transparent 24px, transparent 50px );
+            animation: roadScroll 0.38s linear infinite;
+            opacity: 0.7;
+            z-index: 1;
+        }
+
+        #lane-line-1 {
+            left: 25%;
+        }
+
+        #lane-line-2 {
+            left: 50%;
+        }
+
+        #lane-line-3 {
+            left: 75%;
+        }
+
+        @keyframes roadScroll {
+            from {
+                transform: translateY(-50px);
+            }
+
+            to {
+                transform: translateY(0px);
+            }
+        }
+
+        #game-road.paused .lane-line {
+            animation-play-state: paused;
+        }
+
+        #game-road::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient( to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.12) 4px );
+            z-index: 20;
+        }
+
+
+        /* =========================================================
+           SPIELERAUTO
+           ========================================================= */
+
+        #player-car {
+            position: absolute;
+            width: 72px;
+            height: 110px;
+            bottom: 22px;
+            left: 37.5%;
+            transform: translateX(-50%);
+            transition: left 0.12s ease-out;
+            z-index: 10;
+        }
+
+            #player-car img {
+                position: absolute;
+                width: 145px;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%) rotate(-90deg);
+            }
+
+            #player-car.crashed {
+                animation: crashShake 0.35s;
+            }
+
+        @keyframes crashShake {
+            0% {
+                transform: translateX(-50%);
+            }
+
+            25% {
+                transform: translateX(-65%);
+            }
+
+            50% {
+                transform: translateX(-35%);
+            }
+
+            75% {
+                transform: translateX(-60%);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+
+        /* =========================================================
+           HINDERNISSE
+           ========================================================= */
+
+        .obstacle {
+            position: absolute;
+            width: 68px;
+            height: 74px;
+            top: -100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #bcbcbc;
+            color: #111;
+            border: 4px solid #050505;
+            font-family: "Courier New", monospace;
+            font-weight: bold;
+            font-size: 12px;
+            text-align: center;
+            transform: rotate(2deg);
+            box-shadow: 5px 5px 0 #111;
+            z-index: 5;
+        }
+            .obstacle.image-obstacle {
+                background: transparent;
+                border: none;
+                box-shadow: none;
+            }
+
+        .obstacle-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            filter: contrast(1.08);
+            animation: droneWobble 0.32s infinite alternate ease-in-out;
+        }
+
+        @keyframes droneWobble {
+
+            0% {
+                transform: rotate(-3deg) translateY(-2px);
+            }
+
+            100% {
+                transform: rotate(3deg) translateY(2px);
+            }
+        }
+
+
+        /* =========================================================
+           GAME OVER
+           ========================================================= */
+
+        #game-over {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.92);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s;
+            z-index: 80;
+        }
+
+            #game-over.visible {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+        #game-over-title {
+            font-family: "Courier New", monospace;
+            font-size: clamp(35px, 8vw, 65px);
+            font-weight: bold;
+            transform: rotate(-4deg);
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        #game-over-subtitle {
+            font-family: "Courier New", monospace;
+            color: #999;
+            margin-bottom: 25px;
+        }
+
+        #restart-button {
+            padding: 15px 30px;
+            background: #ddd;
+            color: black;
+            border: 5px solid #555;
+            font-family: "Courier New", monospace;
+            font-size: 24px;
+            cursor: pointer;
+            transform: rotate(2deg);
+        }
+
+            #restart-button:hover {
+                background: white;
+            }
+
+
+        /* =========================================================
+           GAME CONTROLS
+           ========================================================= */
+
+        #game-controls {
+            display: flex;
+            gap: 28px;
+            margin-top: 10px;
+        }
+
+        .game-arrow {
+            width: 115px;
+            height: 60px;
+            background: #171717;
+            color: white;
+            border: 3px solid #777;
+            font-size: 35px;
+            cursor: pointer;
+            touch-action: manipulation;
+            box-shadow: 4px 4px 0 black;
+        }
+
+            .game-arrow:active {
+                transform: translateY(3px);
+            }
+
+        /* =========================================================
+   RAKETE
+   ========================================================= */
+
+        #game-controls {
+            align-items: center;
+            gap: 14px;
+        }
+
+        .rocket-button {
+            position: relative;
+            width: 90px;
+            overflow: hidden;
+        }
+
+            .rocket-button img {
+                position: absolute;
+                width: 25px;
+                height: 38px;
+                object-fit: contain;
+                left: 8px;
+                top: 9px;
+                pointer-events: none;
+            }
+
+        #rocket-cooldown {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: "Courier New", monospace;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .rocket-button.cooldown {
+            opacity: 0.4;
+        }
+
+
+        /* Rakete auf der Straße */
+
+        .rocket-projectile {
+            position: absolute;
+            width: 38px;
+            height: 58px;
+            object-fit: contain;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+
+        /* Explosion */
+
+        .rocket-explosion {
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            object-fit: contain;
+            pointer-events: none;
+            z-index: 18;
+            transform: translate(-50%, -50%) scale(0.15);
+            animation: nuclearBoom 0.85s forwards ease-out;
+        }
+
+
+        @keyframes nuclearBoom {
+
+            0% {
+                transform: translate(-50%, -50%) scale(0.15);
+                opacity: 0;
+            }
+
+            15% {
+                opacity: 1;
+            }
+
+            55% {
+                transform: translate(-50%, -50%) scale(1.15);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.35);
+                opacity: 0;
+            }
+        }
+
+        #control-hint {
+            color: #777;
+            font-size: 12px;
+            margin-top: 5px;
+            letter-spacing: 2px;
+        }
+
+
+        /* =========================================================
+           GAME FADE
+           ========================================================= */
+
+        #game-fade {
+            position: absolute;
+            inset: 0;
+            background: black;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.9s;
+            z-index: 100;
+        }
+
+            #game-fade.visible {
+                opacity: 1;
+            }
+
+
+        /* =========================================================
+           SZENE 4 – SACRO
+           ========================================================= */
+
+        #scene-arrival {
+            background: black;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #arrival-stage {
+            position: relative;
+            width: 1000px;
+            max-width: 96vw;
+            height: 620px;
+            max-height: 78vh;
+            overflow: hidden;
+            border: 4px solid #222;
+            background: linear-gradient( to bottom, #080808, #111 );
+            box-shadow: 0 0 50px black;
+        }
+
+        #arrival-label {
+            position: absolute;
+            left: 24px;
+            top: 22px;
+            padding: 8px 14px;
+            border: 2px dashed #555;
+            color: #aaa;
+            font-family: "Courier New", monospace;
+            font-size: 27px;
+            letter-spacing: 4px;
+            transform: rotate(-3deg);
+            z-index: 12;
+        }
+
+
+        /* Haus */
+
+        #arrival-house {
+            position: absolute;
+            width: 560px;
+            right: 20px;
+            bottom: 26px;
+            z-index: 2;
+        }
+
+
+        /* Boden */
+
+        #arrival-ground {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 38px;
+            height: 3px;
+            background: #333;
+            z-index: 1;
+        }
+
+
+        /* Ankunftsauto */
+
+        #arrival-car {
+            position: absolute;
+            width: 340px;
+            height: 215px;
+            left: -430px;
+            bottom: 45px;
+            z-index: 6;
+        }
+
+        #arrival-car-img {
+            position: absolute;
+            width: 340px;
+            left: 0;
+            bottom: 0;
+        }
+
+        #arrival-driver-head {
+            position: absolute;
+            width: 58px;
+            left: 195px;
+            top: 52px;
+            z-index: 7;
+            transform: rotate(-5deg);
+        }
+
+        #arrival-car.arrive {
+            animation: arrivalCarMove 2.1s forwards ease-out;
+        }
+
+        @keyframes arrivalCarMove {
+            0% {
+                left: -430px;
+            }
+
+            75% {
+                left: 105px;
+            }
+
+            90% {
+                left: 90px;
+            }
+
+            100% {
+                left: 100px;
+            }
+        }
+
+
+        /* Jonathan nach dem Aussteigen */
+
+        #arrival-jonathan {
+            position: absolute;
+            left: 260px;
+            bottom: 48px;
+            width: 190px;
+            height: 300px;
+            display: none;
+            z-index: 8;
+        }
+
+        #arrival-body-img {
+            position: absolute;
+            width: 175px;
+            left: 0;
+            bottom: 0;
+        }
+
+        #arrival-head-img {
+            position: absolute;
+            width: 98px;
+            left: 39px;
+            top: -2px;
+            z-index: 9;
+            animation: headWobble 1.6s infinite;
+        }
+
+        #arrival-jonathan.visible {
+            display: block;
+        }
+
+        #arrival-jonathan.walk-house {
+            animation: walkToHouse 2s forwards ease-in-out;
+        }
+
+        @keyframes walkToHouse {
+            0% {
+                transform: translateX(0) rotate(0deg);
+            }
+
+            25% {
+                transform: translateX(75px) rotate(3deg);
+            }
+
+            50% {
+                transform: translateX(145px) rotate(-3deg);
+            }
+
+            75% {
+                transform: translateX(210px) rotate(3deg);
+            }
+
+            100% {
+                transform: translateX(260px) rotate(0deg);
+            }
+        }
+
+
+        /* Sacro-Sprechblase */
+
+        #arrival-speech {
+            position: absolute;
+            left: 50%;
+            top: 28px;
+            width: 70%;
+            max-width: 690px;
+            padding: 16px 22px;
+            transform: translateX(-50%) rotate(-1deg) scale(0.8);
+            background: white;
+            color: black;
+            border: 5px solid black;
+            box-shadow: 8px 8px 0 #222;
+            font-size: 21px;
+            line-height: 1.35;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.35s, transform 0.35s;
+            z-index: 20;
+        }
+
+            #arrival-speech.visible {
+                opacity: 1;
+                transform: translateX(-50%) rotate(-1deg) scale(1);
+            }
+
+
+        /* Einladung-Button */
+
+        #party-button {
+            margin-top: 18px;
+            padding: 16px 28px;
+            font-size: 22px;
+            letter-spacing: 2px;
+            background: #222;
+            color: white;
+            border: 3px solid #777;
+            box-shadow: 5px 5px 0 #111;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s;
+        }
+
+            #party-button.visible {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+
+        /* =========================================================
+   EINLADUNG / FINAL SCREEN
+   ========================================================= */
+
+        .invitation-screen {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            padding: 24px;
+            box-sizing: border-box;
+            background: #000;
+        }
+
+        #continue-button {
+            padding: 15px 28px;
+            background: #171717;
+            color: white;
+            border: 3px solid #777;
+            font-family: "Courier New", monospace;
+            font-size: 20px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 4px 4px 0 #000;
+        }
+
+            #continue-button:hover {
+                background: #292929;
+            }
+
+        #invitation-image {
+            max-width: 92%;
+            max-height: 82%;
+            object-fit: contain;
+            border: 2px solid rgba(255,255,255,0.15);
+            box-shadow: 0 0 24px rgba(0,0,0,0.45);
+        }
+
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
+
+        @media (max-width: 700px) {
+
+            #speech,
+            #arrival-speech {
+                font-size: 16px;
+                width: 84%;
+            }
+
+            #intro-stage {
+                height: 70vh;
+            }
+
+            #jonathan {
+                left: 15px;
+                transform: scale(0.8);
+                transform-origin: bottom left;
+            }
+
+            #car-wrap {
+                right: 0;
+                transform: scale(0.75);
+                transform-origin: bottom right;
+            }
+
+            #game-road {
+                height: 63vh;
+            }
+
+            .game-arrow {
+                width: 125px;
+                height: 62px;
+            }
+
+            #arrival-stage {
+                height: 70vh;
+            }
+
+            #arrival-house {
+                width: 78vw;
+                right: -10vw;
+            }
+
+            #arrival-car {
+                transform: scale(0.7);
+                transform-origin: bottom left;
+            }
+
+            #arrival-jonathan {
+                transform-origin: bottom left;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+
+    <!-- AUDIO -->
+
+    <audio id="intro-voice" preload="auto">
+        <source src="intro-voice.mp3"
+                type="audio/mpeg">
+    </audio>
+
+    <audio id="arrival-voice" preload="auto">
+        <source src="arrival-voice.mp3"
+                type="audio/mpeg">
+    </audio>
+
+    <audio id="car-start-sound" preload="auto">
+        <source src="car-starts.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="travel-music" preload="auto" loop>
+        <source src="musik1.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="okay-sound" preload="auto">
+        <source src="okay-lets-go.mp3" type="audio/mpeg">
+    </audio>
+
+    <audio id="door-open-sound" src="opendoorhell.mp3" preload="auto"></audio>
+    <audio id="car-braking-sound" src="carbreaking.mp3" preload="auto"></audio>
+
+
+
+    <!-- =====================================================
+         TÜR
+         ===================================================== -->
+
+    <section id="hell-door-screen" class="scene active">
+        <div class="hell-door-container">
+            <img id="hell-door-image"
+                 src="helldoorclosed.png"
+                 alt="Seltsame Tür" />
+
+            <button id="hell-door-button" class="main-button">
+                EINTRETEN
+            </button>
+        </div>
+    </section>
+
+
+
+    <!-- =====================================================
+         MÜNSTER
+         ===================================================== -->
+
+    <div id="scene-intro"
+         class="scene">
+
+        <div id="intro-stage">
+
+            <div id="muenster-label">
+                MÜNSTER
+            </div>
+
+            <div id="speech">
+
+                Oh nein, du hast das Tor zur Hölle geöffnet.
+
+                <br>
+
+                Komm, wir fahren schnell weg.
+
+            </div>
+
+
+            <div id="jonathan">
+
+                <img id="jonathan-body-img"
+                     src="opel.png"
+                     alt="">
+
+                <img id="jonathan-head-img"
+                     src="jogrin1.png"
+                     alt="">
+
+            </div>
+
+
+            <div id="car-wrap">
+
+                <img id="car-img"
+                     src="jobody.png"
+                     alt="">
+
+                <img id="driver-head"
+                     src="jogrin1.png"
+                     alt="">
+
+                <div id="car-noise">
+                    BRUMM
+                </div>
+
+            </div>
+
+
+            <div id="ground-line"></div>
+
+        </div>
+
+
+        <button id="intro-button">
+            SCHNELL WEGFAHREN
+        </button>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         MINIGAME
+         ===================================================== -->
+
+    <div id="scene-game"
+         class="scene">
+
+        <div id="game-top">
+
+            <span id="game-status">
+                MÜNSTER
+            </span>
+
+            <span id="game-timer">
+                35 SEK.
+            </span>
+
+            <span id="game-destination">
+                SACRO
+            </span>
+
+        </div>
+
+
+        <div id="progress-shell">
+
+            <div id="progress-bar"></div>
+
+        </div>
+
+
+        <div id="game-road" class="area-1">
+
+
+            <div id="lane-line-1"
+                 class="lane-line"></div>
+
+            <div id="lane-line-2"
+                 class="lane-line"></div>
+
+            <div id="lane-line-3"
+                 class="lane-line"></div>
+
+
+            <div id="player-car">
+
+                <img src="jobody.png"
+                     alt="">
+
+            </div>
+
+
+            <!-- GAME OVER -->
+
+            <div id="game-over">
+
+                <div id="game-over-title">
+                    BÄM!<br>
+                    DU BIST GESTORBEN.
+                </div>
+
+                <div id="game-over-subtitle">
+                    DAS WAR UNGESCHICKT.
+                </div>
+
+                <button id="restart-button">
+                    NOCHMAL
+                </button>
+
+            </div>
+
+
+            <div id="game-fade"></div>
+
+        </div>
+
+
+        <div id="game-controls">
+
+            <button id="left-button"
+                    class="game-arrow">
+                ←
+            </button>
+
+            <button id="rocket-button"
+                    class="game-arrow rocket-button">
+
+                <img src="rakete.png"
+                     alt="">
+
+                <span id="rocket-cooldown">
+                    FEUER
+                </span>
+
+            </button>
+
+            <button id="right-button"
+                    class="game-arrow">
+                →
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         SACRO
+         ===================================================== -->
+
+    <div id="scene-arrival"
+         class="scene">
+
+        <div id="arrival-stage">
+
+
+            <div id="arrival-label">
+                SACRO
+            </div>
+
+
+            <img id="arrival-house"
+                 src="sacrohaus.png"
+                 alt="">
+
+
+            <div id="arrival-ground"></div>
+
+
+            <!-- Auto fährt herein -->
+
+            <div id="arrival-car">
+
+                <img id="arrival-car-img"
+                     src="jobody.png"
+                     alt="">
+
+                <img id="arrival-driver-head"
+                     src="jogrin1.png"
+                     alt="">
+
+            </div>
+
+
+            <!-- Jonathan steigt aus -->
+
+            <div id="arrival-jonathan">
+
+                <img id="arrival-body-img"
+                     src="opel.png"
+                     alt="">
+
+                <img id="arrival-head-img"
+                     src="jogrin1.png"
+                     alt="">
+
+            </div>
+
+
+            <div id="arrival-speech">
+
+                Hey, wir haben es geschafft!
+
+                <br>
+
+                Hier sind wir sicher.
+
+                <br><br>
+
+                Jetzt fehlen eigentlich nur noch ein paar Leute
+                und dann können wir eine richtige Party machen.
+
+                <br><br>
+
+                Kommst du auch?
+
+            </div>
+
+        </div>
+
+
+        <button id="party-button">
+            JA, LEIDER.
+        </button>
+
+    </div>
+
+    <section id="scene-invitation" class="scene">
+
+        <div class="invitation-screen">
+
+            <img id="invitation-image"
+                 src="party.einladung.png"
+                 alt="Jonathan's Dritteljahrhundert Party Einladung">
+
+            <button id="continue-button">
+                WEITERFAHREN
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+         ===================================================== -->
+
+    <script>
+
+
+        /* =====================================================
+           SZENEN
+           ===================================================== */
+
+        const sceneDoor =
+            document.getElementById("hell-door-screen");
+
+        const sceneIntro =
+            document.getElementById("scene-intro");
+
+        const sceneGame =
+            document.getElementById("scene-game");
+
+        const sceneArrival =
+            document.getElementById("scene-arrival");
+
+        const sceneInvitation =
+            document.getElementById("scene-invitation");
+
+
+        function showScene(scene) {
+
+            sceneDoor.classList.remove("active");
+            sceneIntro.classList.remove("active");
+            sceneGame.classList.remove("active");
+            sceneArrival.classList.remove("active");
+            sceneInvitation.classList.remove("active");
+
+            scene.classList.add("active");
+
+        }
+
+
+
+        /* =====================================================
+           AUDIO
+           ===================================================== */
+
+        const introVoice =
+            document.getElementById("intro-voice");
+
+        const arrivalVoice =
+            document.getElementById("arrival-voice");
+
+        const carStartSound =
+            document.getElementById("car-start-sound");
+
+        const travelMusic =
+            document.getElementById("travel-music");
+
+        const area2Music =
+            new Audio("musik2.mp3");
+
+        area2Music.loop = true;
+        area2Music.volume = 0;
+
+        let currentAreaMusic = null;
+
+        const rocketLaunchSound =
+            new Audio(
+                "rakete-launch.mp3"
+            );
+
+        const rocketExplosionSound =
+            new Audio(
+                "explosion.mp3"
+            );
+
+
+        rocketLaunchSound.volume =
+            0.85;
+
+        rocketExplosionSound.volume =
+            0.9;
+
+        const hellDoorScreen =
+            document.getElementById("hell-door-screen");
+
+        const hellDoorImage =
+            document.getElementById("hell-door-image");
+
+        const hellDoorButton =
+            document.getElementById("hell-door-button");
+
+        const doorOpenSound =
+            document.getElementById("door-open-sound");
+
+        const carBrakingSound =
+            document.getElementById("car-braking-sound");
+
+        let hellDoorOpened =
+            false;
+
+        /* =====================================================
+           HINDERNIS-SOUNDS
+           ===================================================== */
+
+        const obstacleSounds = {
+
+            drone:
+                new Audio("okay-lets-go.mp3"),
+
+            skull:
+                new Audio("totenkopf.mp3"),
+
+            geisterfahrer:
+                new Audio("geisterfahrer.mp3"),
+
+            hotelfan:
+                new Audio("hotelfan.mp3"),
+
+            roxanne:
+                new Audio("roxanne.mp3"),
+
+            rudiger:
+                new Audio("rudiger.mp3"),
+
+            hoertaufanzurufen:
+                new Audio("hoertaufanzurufen.mp3"),
+
+            idoubit:
+                new Audio("idoubtit.mp3"),
+
+            madenmann:
+                new Audio("madenmann.mp3"),
+
+            handpuppe:
+                new Audio("handpuppe.mp3"),
+
+        };
+
+
+        /* Lautstärke der Hindernis-Sounds */
+
+        Object.values(obstacleSounds).forEach(
+            function (audio) {
+
+                audio.preload = "auto";
+                audio.volume = 0.6;
+
+            }
+        );
+
+
+        function playObstacleSound(soundName) {
+
+            if (
+                !soundName
+                ||
+                !obstacleSounds[soundName]
+            ) {
+                return;
+            }
+
+
+            const audio =
+                obstacleSounds[soundName];
+
+
+            audio.currentTime = 0;
+
+
+            audio.play()
+                .catch(
+                    function () { }
+                );
+
+        }
+
+        function openHellDoor() {
+
+            if (hellDoorOpened) {
+                return;
+            }
+
+            hellDoorOpened =
+                true;
+
+            hellDoorButton.disabled =
+                true;
+
+            /*
+                Bild von geschlossen auf offen wechseln
+            */
+
+            hellDoorImage.src =
+                "helldooropen.png";
+
+
+            /*
+                Türsound
+            */
+
+            doorOpenSound.currentTime =
+                0;
+
+            doorOpenSound.play()
+                .catch(function () { });
+
+
+            /*
+                Kurz die offene Tür zeigen,
+                dann nach Münster wechseln
+            */
+
+            setTimeout(
+                function () {
+
+                    showScene(
+                        sceneIntro
+                    );
+
+
+                    /*
+                        Münster-Stimme starten
+                    */
+
+                    introVoice.currentTime =
+                        0;
+
+                    introVoice.play()
+                        .catch(function () { });
+
+                },
+                5400
+            );
+
+        }
+
+        function fadeAudio(audio, targetVolume, duration, pauseAtEnd = false) {
+
+            const startVolume = audio.volume;
+            const difference = targetVolume - startVolume;
+
+            const startTime = performance.now();
+
+            function step(currentTime) {
+
+                const elapsed =
+                    currentTime - startTime;
+
+                const progress =
+                    Math.min(elapsed / duration, 1);
+
+                audio.volume =
+                    Math.max(
+                        0,
+                        Math.min(
+                            1,
+                            startVolume
+                            +
+                            difference * progress
+                        )
+                    );
+
+                if (progress < 1) {
+
+                    requestAnimationFrame(step);
+
+                } else if (pauseAtEnd) {
+
+                    audio.pause();
+
+                    audio.currentTime = 0;
+                }
+            }
+
+            requestAnimationFrame(step);
+        }
+
+        /* =====================================================
+           TÜR
+           ===================================================== */
+
+
+        hellDoorButton.addEventListener(
+            "click",
+            openHellDoor
+        );
+
+        hellDoorImage.addEventListener(
+            "click",
+            openHellDoor
+        );
+
+
+
+        /* =====================================================
+           MÜNSTER → SPIEL
+           ===================================================== */
+
+        const introButton =
+            document.getElementById("intro-button");
+
+        const jonathan =
+            document.getElementById("jonathan");
+
+        const carWrap =
+            document.getElementById("car-wrap");
+
+        const driverHead =
+            document.getElementById("driver-head");
+
+        const rocketButton =
+            document.getElementById(
+                "rocket-button"
+            );
+
+        const rocketCooldownText =
+            document.getElementById(
+                "rocket-cooldown"
+            );
+
+
+        let introAnimationRunning =
+            false;
+
+
+        introButton.addEventListener(
+            "click",
+            function () {
+
+                if (introAnimationRunning) {
+                    return;
+                }
+
+
+                introAnimationRunning =
+                    true;
+
+                travelMusic.currentTime =
+                    0;
+
+                travelMusic.volume =
+                    0;
+
+                travelMusic.play()
+                    .catch(function () { });
+
+                introButton.disabled =
+                    true;
+
+
+                introButton.style.opacity =
+                    "0.45";
+
+
+                jonathan.classList.add(
+                    "entering-car"
+                );
+
+
+                /* Motor startet kurz bevor Jonathan im Auto sitzt */
+
+                setTimeout(
+                    function () {
+
+                        carStartSound.currentTime = 0;
+
+                        carStartSound.play()
+                            .catch(
+                                function () { }
+                            );
+
+
+                        /* Reisemusik langsam einblenden */
+
+                        fadeAudio(
+                            travelMusic,
+                            0.65,
+                            2500
+                        );
+
+                    },
+                    1100
+                );
+
+
+                /* Jonathan sitzt jetzt im Auto */
+
+                setTimeout(
+                    function () {
+
+                        jonathan.classList.add(
+                            "hidden"
+                        );
+
+                        driverHead.classList.add(
+                            "visible"
+                        );
+
+                    },
+                    1250
+                );
+
+
+                /* Auto fährt los */
+
+                setTimeout(
+                    function () {
+
+                        carWrap.classList.add(
+                            "drive-away"
+                        );
+
+                    },
+                    1500
+                );
+
+                setTimeout(
+                    function () {
+
+                        showScene(
+                            sceneGame
+                        );
+
+                        startGame();
+
+                    },
+                    3000
+                );
+
+            }
+        );
+
+
+
+        /* =====================================================
+           MINIGAME
+           ===================================================== */
+
+        const GAME_DURATION =
+            35000;
+
+        const NUMBER_OF_LANES =
+            4;
+
+
+        const road =
+            document.getElementById(
+                "game-road"
+            );
+
+        const playerCar =
+            document.getElementById(
+                "player-car"
+            );
+
+        const leftButton =
+            document.getElementById(
+                "left-button"
+            );
+
+        const rightButton =
+            document.getElementById(
+                "right-button"
+            );
+
+        const timerText =
+            document.getElementById(
+                "game-timer"
+            );
+
+        const gameStatus =
+            document.getElementById(
+                "game-status"
+            );
+
+        const gameDestination =
+            document.getElementById(
+                "game-destination"
+            );
+
+        const progressBar =
+            document.getElementById(
+                "progress-bar"
+            );
+
+        const gameFade =
+            document.getElementById(
+                "game-fade"
+            );
+
+        const gameOver =
+            document.getElementById(
+                "game-over"
+            );
+
+        const restartButton =
+            document.getElementById(
+                "restart-button"
+            );
+
+        const gameOverSubtitle =
+            document.getElementById(
+                "game-over-subtitle"
+            );
+
+
+        let currentLane = 1;
+
+        let gameRunning = false;
+
+        let gameStartTime = 0;
+
+        let previousFrameTime = 0;
+
+        let lastSpawnTime = 0;
+
+        let nextSpawnDelay = 800;
+
+        let obstacles = [];
+
+
+        /* =====================================================
+           SPIELMODUS / SCORE
+           ===================================================== */
+
+        let gameMode =
+            "story";
+
+        let endlessScore =
+            0;
+
+        const AREA_DURATION =
+            75000;
+
+        const AREA3_SPEED_MULTIPLIER =
+            1.35;
+
+        let currentArea =
+            1;
+
+
+        /* =====================================================
+           RAKETEN-SYSTEM
+           ===================================================== */
+
+        let animationFrameId = null;
+
+        /* =====================================================
+RAKETEN-SYSTEM
+===================================================== */
+
+        const ROCKET_COOLDOWN =
+            15000;
+
+        const ROCKET_LAUNCH_DELAY =
+            1000;
+
+        const ROCKET_SPEED =
+            650;
+
+
+        let rocketReady =
+            true;
+
+        let rocketLaunchPending =
+            false;
+
+        let activeRocket =
+            null;
+
+        let rocketAnimationId =
+            null;
+
+        let rocketLaunchTimeout =
+            null;
+
+        let rocketCooldownInterval =
+            null;
+
+        let rocketCooldownEnd =
+            0;
+
+
+
+        /* =====================================================
+           SPIELER BEWEGEN
+           ===================================================== */
+
+        function updatePlayerPosition() {
+
+            const laneWidth =
+                100 / NUMBER_OF_LANES;
+
+            const position =
+                currentLane * laneWidth
+                +
+                laneWidth / 2;
+
+            playerCar.style.left =
+                position + "%";
+
+        }
+
+
+        function moveLeft() {
+
+            if (!gameRunning) {
+                return;
+            }
+
+            currentLane =
+                Math.max(
+                    0,
+                    currentLane - 1
+                );
+
+            updatePlayerPosition();
+
+        }
+
+
+        function moveRight() {
+
+            if (!gameRunning) {
+                return;
+            }
+
+            currentLane =
+                Math.min(
+                    NUMBER_OF_LANES - 1,
+                    currentLane + 1
+                );
+
+            updatePlayerPosition();
+
+        }
+
+
+
+        /* Tastatur */
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (!gameRunning) {
+                    return;
+                }
+
+
+                if (
+                    event.key === "ArrowLeft"
+                    ||
+                    event.key.toLowerCase() === "a"
+                ) {
+
+                    event.preventDefault();
+
+                    moveLeft();
+
+                }
+
+                if (
+                    event.key
+                    ===
+                    "ArrowDown"
+                    ||
+                    event.key.toLowerCase()
+                    ===
+                    "s"
+                ) {
+
+                    event.preventDefault();
+
+                    fireRocket();
+
+                }
+
+                if (
+                    event.key === "ArrowRight"
+                    ||
+                    event.key.toLowerCase() === "d"
+                ) {
+
+                    event.preventDefault();
+
+                    moveRight();
+
+                }
+
+            }
+        );
+
+
+        /* Handy */
+
+        leftButton.addEventListener(
+            "pointerdown",
+            function (event) {
+
+                event.preventDefault();
+
+                moveLeft();
+
+            }
+        );
+
+
+        rightButton.addEventListener(
+            "pointerdown",
+            function (event) {
+
+                event.preventDefault();
+
+                moveRight();
+
+            }
+        );
+
+
+
+        /* =====================================================
+           HINDERNISSE
+           ===================================================== */
+
+        const area1ObstacleTypes = [
+
+            /* =========================================
+               MIT SOUND
+               ========================================= */
+
+            {
+                name: "drone",
+                image: "drohne.png",
+                sound: "drone",
+                weight: 2.5,
+                width: 105,
+                height: 105
+            },
+
+            {
+                name: "skull",
+                image: "totenkopf.png",
+                sound: "skull",
+                weight: 2.2,
+                width: 100,
+                height: 100
+            },
+
+            {
+                name: "geisterfahrer",
+                image: "geisterfahrer.png",
+                sound: "geisterfahrer",
+                weight: 2.5,
+                width: 115,
+                height: 115
+            },
+
+            {
+                name: "hotelfan",
+                image: "hotelfan.png",
+                sound: "hotelfan",
+                weight: 2.5,
+                width: 95,
+                height: 95
+            },
+
+            /*
+                MARCEL / ROXANNE
+                absichtlich selten
+            */
+
+            {
+                name: "roxanne",
+                image: "roxanne.png",
+                sound: "roxanne",
+                weight: 0.55,
+                width: 100,
+                height: 100
+            },
+
+
+            /* =========================================
+               OHNE SOUND
+               ========================================= */
+
+            {
+                name: "rudiger",
+                image: "rudiger.png",
+                sound: "rudiger",
+                weight: 2.5,
+                width: 120,
+                height: 110
+            },
+
+            {
+                name: "ratte",
+                image: "ratte.png",
+                sound: null,
+                weight: 4.0,
+                width: 115,
+                height: 115
+            },
+
+            {
+                name: "puppe",
+                image: "puppe.png",
+                sound: null,
+                weight: 3.5,
+                width: 110,
+                height: 110
+            },
+
+            {
+                name: "fernseher",
+                image: "fernseher.png",
+                sound: null,
+                weight: 4.5,
+                width: 115,
+                height: 115
+            },
+
+            {
+                name: "gebiss",
+                image: "gebiss.png",
+                sound: null,
+                weight: 5.0,
+                width: 110,
+                height: 110
+            }
+
+        ];
+
+        const area2ObstacleTypes = [
+
+            /* =============================
+               MIT SOUND
+               ============================= */
+
+            {
+                name: "hoertaufanzurufen",
+                image: "hoertaufanzurufen.png",
+                sound: "hoertaufanzurufen",
+                weight: 1.5,
+                width: 105,
+                height: 105
+            },
+
+            {
+                name: "idoubit",
+                image: "idoubtit.png",
+                sound: "idoubit",
+                weight: 1.5,
+                width: 115,
+                height: 120
+            },
+
+            {
+                name: "madenmann",
+                image: "madenmann.png",
+                sound: "madenmann",
+                weight: 1.4,
+                width: 135,
+                height: 95
+            },
+
+            {
+                name: "handpuppe",
+                image: "handpuppe.png",
+                sound: "handpuppe",
+                weight: 0.45,
+                width: 105,
+                height: 115
+            },
+
+            {
+                name: "roxanne-area2",
+                image: "roxanne.png",
+                sound: "roxanne",
+                weight: 0.35,
+                width: 100,
+                height: 100
+            },
+
+
+            /* =============================
+               OHNE SOUND
+               ============================= */
+
+            {
+                name: "alien",
+                image: "alien.png",
+                sound: null,
+                weight: 3.0,
+                width: 120,
+                height: 110
+            },
+
+            {
+                name: "babykopf",
+                image: "babykopf.png",
+                sound: null,
+                weight: 3.2,
+                width: 110,
+                height: 115
+            },
+
+            {
+                name: "grandma",
+                image: "grandma.png",
+                sound: null,
+                weight: 3.0,
+                width: 110,
+                height: 120
+            }
+
+        ];
+
+        /*
+Nach einem Sound-Hindernis
+muss mindestens EIN stummes Hindernis kommen.
+*/
+
+        let soundObstacleCooldown = 0;
+
+
+        /*
+            Gewichtete Zufallsauswahl
+        */
+
+        function weightedRandomObstacle(list) {
+
+            let totalWeight = 0;
+
+
+            list.forEach(
+                function (obstacle) {
+
+                    totalWeight +=
+                        obstacle.weight;
+
+                }
+            );
+
+
+            let random =
+                Math.random()
+                *
+                totalWeight;
+
+
+            for (
+                const obstacle
+                of list
+            ) {
+
+                random -=
+                    obstacle.weight;
+
+
+                if (random <= 0) {
+
+                    return obstacle;
+
+                }
+
+            }
+
+
+            return list[
+                list.length - 1
+            ];
+
+        }
+
+        function getCurrentObstaclePool() {
+
+            if (
+                gameMode === "endless"
+                &&
+                currentArea === 2
+            ) {
+
+                return area2ObstacleTypes;
+
+            }
+
+            /*
+                Story, Area 1 und Area 3
+                verwenden die bisherigen Hindernisse.
+            */
+
+            return area1ObstacleTypes;
+
+        }
+
+        function chooseObstacleType() {
+
+            const obstaclePool =
+                getCurrentObstaclePool();
+
+            let availableObstacles;
+
+
+            /*
+                Gerade war ein Sound da:
+                jetzt nur stille Gegner zulassen.
+            */
+
+            if (
+                soundObstacleCooldown > 0
+            ) {
+
+                availableObstacles =
+                    obstaclePool.filter(
+                        function (obstacle) {
+
+                            return !obstacle.sound;
+
+                        }
+                    );
+
+            }
+
+            else {
+
+                availableObstacles =
+                    obstaclePool;
+
+            }
+
+
+            const chosen =
+                weightedRandomObstacle(
+                    availableObstacles
+                );
+
+
+            /*
+                Sound-Hindernis gewählt:
+                nächster Gegner MUSS stumm sein.
+            */
+
+            if (chosen.sound) {
+
+                soundObstacleCooldown =
+                    1;
+
+            }
+
+            else if (
+                soundObstacleCooldown > 0
+            ) {
+
+                soundObstacleCooldown--;
+
+            }
+
+
+            return chosen;
+
+        }
+
+
+        function spawnObstacle() {
+
+            /*
+                Nach Gewichtung und Sound-Regeln auswählen
+            */
+
+            const obstacleType =
+                chooseObstacleType();
+
+
+            /*
+                Hindernis erstellen
+            */
+
+            const obstacle =
+                document.createElement(
+                    "div"
+                );
+
+
+            obstacle.className =
+                "obstacle image-obstacle";
+
+
+            obstacle.style.width =
+                obstacleType.width
+                +
+                "px";
+
+
+            obstacle.style.height =
+                obstacleType.height
+                +
+                "px";
+
+
+            /*
+                Bild erstellen
+            */
+
+            const image =
+                document.createElement(
+                    "img"
+                );
+
+
+            image.src =
+                obstacleType.image;
+
+
+            image.className =
+                "obstacle-image";
+
+
+            obstacle.appendChild(
+                image
+            );
+
+
+            /*
+                Zufällige Fahrspur
+            */
+
+            const lane =
+                Math.floor(
+                    Math.random()
+                    *
+                    NUMBER_OF_LANES
+                );
+
+
+            const laneWidth =
+                road.clientWidth
+                /
+                NUMBER_OF_LANES;
+
+
+            const x =
+                lane * laneWidth
+                +
+                laneWidth / 2
+                -
+                obstacleType.width / 2;
+
+
+            obstacle.style.left =
+                x
+                +
+                "px";
+
+
+            road.appendChild(
+                obstacle
+            );
+
+
+            /*
+                Hindernis ins Spiel eintragen
+
+                Der Sound wird absichtlich NOCH NICHT abgespielt.
+                Erst wenn das Hindernis wirklich ins Bild kommt.
+            */
+
+            obstacles.push({
+
+                element:
+                    obstacle,
+
+                y:
+                    -140,
+
+                speed:
+                    220
+                    +
+                    Math.random()
+                    *
+                    80,
+
+                type:
+                    obstacleType.name,
+
+                sound:
+                    obstacleType.sound,
+
+                soundPlayed:
+                    false
+
+            });
+
+        }
+
+        /* =====================================================
+RAKETE ABSCHIESSEN
+===================================================== */
+
+        function fireRocket() {
+
+            if (
+                !gameRunning
+                ||
+                !rocketReady
+                ||
+                rocketLaunchPending
+            ) {
+                return;
+            }
+
+
+            rocketReady =
+                false;
+
+            rocketLaunchPending =
+                true;
+
+
+            /*
+                Button sofort sperren
+            */
+
+            rocketButton.disabled =
+                true;
+
+            rocketButton.classList.add(
+                "cooldown"
+            );
+
+
+            /*
+                Launch-Sound
+            */
+
+            rocketLaunchSound.currentTime =
+                0;
+
+            rocketLaunchSound.play()
+                .catch(function () { });
+
+
+            /*
+                Cooldown beginnt sofort
+            */
+
+            startRocketCooldown();
+
+
+            /*
+                Kurze dramatische Zündverzögerung
+            */
+
+            rocketLaunchTimeout =
+                setTimeout(
+                    function () {
+
+                        rocketLaunchPending =
+                            false;
+
+                        if (!gameRunning) {
+                            return;
+                        }
+
+                        spawnRocket();
+
+                    },
+                    ROCKET_LAUNCH_DELAY
+                );
+
+        }
+
+
+        function resetRocketSystem() {
+
+            removeActiveRocket();
+
+
+            if (rocketLaunchTimeout) {
+
+                clearTimeout(
+                    rocketLaunchTimeout
+                );
+
+                rocketLaunchTimeout =
+                    null;
+            }
+
+
+            if (rocketCooldownInterval) {
+
+                clearInterval(
+                    rocketCooldownInterval
+                );
+
+                rocketCooldownInterval =
+                    null;
+            }
+
+
+            rocketReady =
+                true;
+
+            rocketLaunchPending =
+                false;
+
+
+            rocketCooldownText.textContent =
+                "FEUER";
+
+
+            rocketButton.classList.remove(
+                "cooldown"
+            );
+
+
+            rocketButton.disabled =
+                false;
+
+        }
+
+        /* =====================================================
+           RAKETE ERZEUGEN
+           ===================================================== */
+
+        function spawnRocket() {
+
+            /*
+                Falls theoretisch noch eine Rakete existiert,
+                alte entfernen.
+            */
+
+            removeActiveRocket();
+
+
+            const rocket =
+                document.createElement(
+                    "img"
+                );
+
+
+            rocket.src =
+                "rakete.png";
+
+            rocket.className =
+                "rocket-projectile";
+
+
+            const roadRect =
+                road.getBoundingClientRect();
+
+            const playerRect =
+                playerCar
+                    .getBoundingClientRect();
+
+
+            const rocketWidth =
+                38;
+
+            const rocketHeight =
+                58;
+
+
+            /*
+                Rakete exakt aus der Mitte
+                unseres Autos starten lassen
+            */
+
+            const x =
+                playerRect.left
+                -
+                roadRect.left
+                +
+                playerRect.width / 2
+                -
+                rocketWidth / 2;
+
+
+            const y =
+                playerRect.top
+                -
+                roadRect.top
+                -
+                rocketHeight + 15;
+
+
+            rocket.style.left =
+                x + "px";
+
+            rocket.style.top =
+                y + "px";
+
+
+            road.appendChild(
+                rocket
+            );
+
+
+            activeRocket = {
+
+                element:
+                    rocket,
+
+                y:
+                    y,
+
+                lastTime:
+                    performance.now()
+
+            };
+
+
+            rocketAnimationId =
+                requestAnimationFrame(
+                    moveRocket
+                );
+
+        }
+
+
+        /* =====================================================
+           RAKETE BEWEGEN
+           ===================================================== */
+
+        function moveRocket(currentTime) {
+
+            if (
+                !activeRocket
+                ||
+                !gameRunning
+            ) {
+
+                removeActiveRocket();
+
+                return;
+            }
+
+
+            const delta =
+                Math.min(
+                    (
+                        currentTime
+                        -
+                        activeRocket.lastTime
+                    )
+                    /
+                    1000,
+
+                    0.05
+                );
+
+
+            activeRocket.lastTime =
+                currentTime;
+
+
+            activeRocket.y -=
+                ROCKET_SPEED
+                *
+                delta;
+
+
+            activeRocket.element.style.top =
+                activeRocket.y
+                +
+                "px";
+
+
+            /*
+                Kollisionsprüfung
+            */
+
+            const rocketRect =
+                activeRocket.element
+                    .getBoundingClientRect();
+
+
+            for (
+                let i =
+                    obstacles.length - 1;
+
+                i >= 0;
+
+                i--
+            ) {
+
+                const obstacle =
+                    obstacles[i];
+
+
+                const obstacleRect =
+                    obstacle.element
+                        .getBoundingClientRect();
+
+
+                if (
+                    rectanglesTouch(
+                        rocketRect,
+                        obstacleRect
+                    )
+                ) {
+
+                    /*
+                        Explosionsposition sichern
+                    */
+
+                    const roadRect =
+                        road
+                            .getBoundingClientRect();
+
+
+                    const explosionX =
+                        obstacleRect.left
+                        -
+                        roadRect.left
+                        +
+                        obstacleRect.width / 2;
+
+
+                    const explosionY =
+                        obstacleRect.top
+                        -
+                        roadRect.top
+                        +
+                        obstacleRect.height / 2;
+
+
+                    /*
+                        Hindernis vernichten
+                    */
+
+                    obstacle.element.remove();
+
+                    obstacles.splice(
+                        i,
+                        1
+                    );
+
+
+                    /*
+                        Rakete vernichten
+                    */
+
+                    removeActiveRocket();
+
+
+                    /*
+                        ATOMBOMBE
+                    */
+
+                    createExplosion(
+                        explosionX,
+                        explosionY
+                    );
+
+
+                    return;
+
+                }
+
+            }
+
+
+            /*
+                Rakete hat Bildschirm verlassen
+            */
+
+            if (
+                activeRocket.y
+                <
+                -100
+            ) {
+
+                removeActiveRocket();
+
+                return;
+
+            }
+
+
+            rocketAnimationId =
+                requestAnimationFrame(
+                    moveRocket
+                );
+
+        }
+
+
+        /* =====================================================
+           EXPLOSION
+           ===================================================== */
+
+        function createExplosion(
+            x,
+            y
+        ) {
+
+            const explosion =
+                document.createElement(
+                    "img"
+                );
+
+
+            explosion.src =
+                "explosion.png";
+
+            explosion.className =
+                "rocket-explosion";
+
+
+            explosion.style.left =
+                x + "px";
+
+            explosion.style.top =
+                y + "px";
+
+
+            road.appendChild(
+                explosion
+            );
+
+
+            /*
+                Explosionssound
+            */
+
+            rocketExplosionSound.currentTime =
+                0;
+
+            rocketExplosionSound.play()
+                .catch(function () { });
+
+
+            /*
+                Explosion wieder entfernen
+            */
+
+            setTimeout(
+                function () {
+
+                    explosion.remove();
+
+                },
+                900
+            );
+
+        }
+
+
+        /* =====================================================
+           RAKETE ENTFERNEN
+           ===================================================== */
+
+        function removeActiveRocket() {
+
+            if (rocketAnimationId) {
+
+                cancelAnimationFrame(
+                    rocketAnimationId
+                );
+
+                rocketAnimationId =
+                    null;
+            }
+
+
+            if (activeRocket) {
+
+                activeRocket.element.remove();
+
+                activeRocket =
+                    null;
+            }
+
+        }
+
+
+        /* =====================================================
+           COOLDOWN
+           ===================================================== */
+
+        function startRocketCooldown() {
+
+            rocketCooldownEnd =
+                Date.now()
+                +
+                ROCKET_COOLDOWN;
+
+
+            updateRocketCooldown();
+
+
+            if (rocketCooldownInterval) {
+
+                clearInterval(
+                    rocketCooldownInterval
+                );
+            }
+
+
+            rocketCooldownInterval =
+                setInterval(
+                    updateRocketCooldown,
+                    200
+                );
+
+        }
+
+
+        function updateRocketCooldown() {
+
+            const remaining =
+                rocketCooldownEnd
+                -
+                Date.now();
+
+
+            if (remaining <= 0) {
+
+                rocketReady =
+                    true;
+
+
+                rocketButton.classList.remove(
+                    "cooldown"
+                );
+
+
+                if (gameRunning) {
+
+                    rocketButton.disabled =
+                        false;
+
+                }
+
+
+                rocketCooldownText.textContent =
+                    "FEUER";
+
+
+                clearInterval(
+                    rocketCooldownInterval
+                );
+
+
+                rocketCooldownInterval =
+                    null;
+
+
+                return;
+
+            }
+
+
+            const seconds =
+                Math.ceil(
+                    remaining
+                    /
+                    1000
+                );
+
+
+            rocketCooldownText.textContent =
+                seconds + "s";
+
+        }
+
+        /* =====================================================
+           KOLLISION
+           ===================================================== */
+
+        function rectanglesTouch(
+            a,
+            b
+        ) {
+
+            const padding =
+                8;
+
+
+            return !(
+                a.right - padding
+                < b.left
+                ||
+                a.left + padding
+                > b.right
+                ||
+                a.bottom - padding
+                < b.top
+                ||
+                a.top + padding
+                > b.bottom
+            );
+
+        }
+
+
+
+        function triggerGameOver() {
+
+            if (!gameRunning) {
+                return;
+            }
+
+
+            gameRunning =
+                false;
+
+            removeActiveRocket();
+
+            if (animationFrameId) {
+
+                cancelAnimationFrame(
+                    animationFrameId
+                );
+
+            }
+
+
+            road.classList.add(
+                "paused"
+            );
+
+
+            playerCar.classList.remove(
+                "crashed"
+            );
+
+
+            void playerCar.offsetWidth;
+
+
+            playerCar.classList.add(
+                "crashed"
+            );
+
+
+            gameStatus.textContent =
+                "TOT.";
+
+            if (
+                gameMode
+                ===
+                "endless"
+            ) {
+
+                gameOverSubtitle.textContent =
+                    "SCORE: "
+                    +
+                    endlessScore
+                    +
+                    " PUNKTE";
+
+            }
+
+            else {
+
+                gameOverSubtitle.textContent =
+                    "DAS WAR UNGESCHICKT.";
+
+            }
+
+
+            setTimeout(
+                function () {
+
+                    gameOver.classList.add(
+                        "visible"
+                    );
+
+                },
+                250
+            );
+
+        }
+
+
+
+        /* =====================================================
+           GAME LOOP
+           ===================================================== */
+
+        /* =====================================================
+AREA SYSTEM
+===================================================== */
+
+        function getAreaSpeedMultiplier() {
+
+            if (
+                gameMode === "endless"
+                &&
+                currentArea === 3
+            ) {
+
+                return AREA3_SPEED_MULTIPLIER;
+
+            }
+
+            return 1;
+
+        }
+
+
+        function playAreaMusic(area) {
+
+            const targetMusic =
+                area === 2
+                    ? area2Music
+                    : travelMusic;
+
+
+            const otherMusic =
+                targetMusic === travelMusic
+                    ? area2Music
+                    : travelMusic;
+
+
+            if (!otherMusic.paused) {
+
+                fadeAudio(
+                    otherMusic,
+                    0,
+                    1200,
+                    true
+                );
+
+            }
+
+
+            if (
+                currentAreaMusic !== targetMusic
+                ||
+                targetMusic.paused
+            ) {
+
+                targetMusic.currentTime =
+                    0;
+
+                targetMusic.volume =
+                    0;
+
+
+                targetMusic.play()
+                    .catch(function () { });
+
+
+                fadeAudio(
+                    targetMusic,
+                    0.6,
+                    1200
+                );
+
+            }
+
+
+            currentAreaMusic =
+                targetMusic;
+
+        }
+
+
+        function setArea(
+            area,
+            changeMusic = true,
+            clearRoad = true
+        ) {
+
+            currentArea =
+                area;
+
+
+            road.classList.remove(
+                "area-1",
+                "area-2",
+                "area-3"
+            );
+
+
+            road.classList.add(
+                "area-" + area
+            );
+
+
+            if (
+                gameMode === "endless"
+            ) {
+
+                gameStatus.textContent =
+                    "AREA " + area;
+
+                gameDestination.textContent =
+                    "∞";
+
+            }
+
+
+            if (clearRoad) {
+
+                clearObstacles();
+
+                soundObstacleCooldown =
+                    0;
+
+                lastSpawnTime =
+                    performance.now();
+
+            }
+
+
+            if (changeMusic) {
+
+                playAreaMusic(
+                    area
+                );
+
+            }
+
+        }
+
+        function gameLoop(
+            currentTime
+        ) {
+
+            if (!gameRunning) {
+                return;
+            }
+
+
+            const elapsed =
+                currentTime
+                -
+                gameStartTime;
+
+
+            const delta =
+                Math.min(
+                    (
+                        currentTime
+                        -
+                        previousFrameTime
+                    )
+                    /
+                    1000,
+
+                    0.05
+                );
+
+
+            previousFrameTime =
+                currentTime;
+
+
+
+            /* Spawn */
+
+            if (
+                currentTime
+                -
+                lastSpawnTime
+                >
+                nextSpawnDelay
+            ) {
+
+                spawnObstacle();
+
+
+                lastSpawnTime =
+                    currentTime;
+
+
+                nextSpawnDelay =
+                    700
+                    +
+                    Math.random()
+                    * 450;
+
+            }
+
+
+
+            /* Bewegung */
+
+            const playerRect =
+                playerCar
+                    .getBoundingClientRect();
+
+
+            for (
+                let i =
+                    obstacles.length - 1;
+
+                i >= 0;
+
+                i--
+            ) {
+
+                const obstacle =
+                    obstacles[i];
+
+
+                obstacle.y +=
+                    obstacle.speed
+                    *
+                    getAreaSpeedMultiplier()
+                    *
+                    delta;
+
+                obstacle.element.style.top =
+                    obstacle.y
+                    +
+                    "px";
+
+                /*
+Sound starten,
+sobald das Hindernis ins Bild kommt
+*/
+
+                if (
+                    obstacle.sound
+                    &&
+                    !obstacle.soundPlayed
+                    &&
+                    obstacle.y >= -40
+                ) {
+
+                    obstacle.soundPlayed =
+                        true;
+
+
+                    playObstacleSound(
+                        obstacle.sound
+                    );
+
+                }
+
+
+                const obstacleRect =
+                    obstacle.element
+                        .getBoundingClientRect();
+
+
+                if (
+                    rectanglesTouch(
+                        playerRect,
+                        obstacleRect
+                    )
+                ) {
+
+                    triggerGameOver();
+
+                    return;
+
+                }
+
+
+                if (
+                    obstacle.y
+                    >
+                    road.clientHeight
+                    +
+                    120
+                ) {
+
+                    obstacle.element.remove();
+
+
+                    obstacles.splice(
+                        i,
+                        1
+                    );
+
+                }
+
+            }
+
+
+
+            /* =====================================================
+               STORY / ENDLESS FORTSCHRITT
+               ===================================================== */
+
+            if (
+                gameMode
+                ===
+                "story"
+            ) {
+
+                const progress =
+                    Math.min(
+                        elapsed
+                        /
+                        GAME_DURATION,
+                        1
+                    );
+
+
+                progressBar.style.width =
+                    (
+                        progress
+                        *
+                        100
+                    )
+                    +
+                    "%";
+
+
+                const secondsLeft =
+                    Math.max(
+                        0,
+
+                        Math.ceil(
+                            (
+                                GAME_DURATION
+                                -
+                                elapsed
+                            )
+                            /
+                            1000
+                        )
+                    );
+
+
+                timerText.textContent =
+                    secondsLeft
+                    +
+                    " SEK.";
+
+
+                if (
+                    elapsed
+                    >=
+                    GAME_DURATION
+                ) {
+
+                    finishGame();
+
+                    return;
+
+                }
+
+            }
+
+
+            /* ENDLESS */
+
+            else {
+
+                /* =============================
+                   SCORE
+                   ============================= */
+
+                endlessScore =
+                    Math.floor(
+                        elapsed / 10
+                    );
+
+
+                timerText.textContent =
+                    endlessScore
+                    +
+                    " PUNKTE";
+
+
+                /* =============================
+                   AREA BESTIMMEN
+                   ============================= */
+
+                const areaStage =
+                    Math.floor(
+                        elapsed
+                        /
+                        AREA_DURATION
+                    );
+
+
+                let targetArea;
+
+
+                /*
+                    Erste zwei Minuten:
+                    AREA 1
+                */
+
+                if (
+                    areaStage === 0
+                ) {
+
+                    targetArea =
+                        1;
+
+                }
+
+                /*
+                    Danach:
+                    AREA 2 → AREA 3 → AREA 2 → AREA 3...
+                */
+
+                else {
+
+                    targetArea =
+                        areaStage % 2 === 1
+                            ? 2
+                            : 3;
+
+                }
+
+
+                if (
+                    targetArea
+                    !==
+                    currentArea
+                ) {
+
+                    setArea(
+                        targetArea,
+                        true,
+                        true
+                    );
+
+                }
+
+
+                /* =============================
+                   FORTSCHRITTSBALKEN =
+                   ZEIT BIS NÄCHSTE AREA
+                   ============================= */
+
+                const areaElapsed =
+                    elapsed
+                    %
+                    AREA_DURATION;
+
+
+                const areaProgress =
+                    areaElapsed
+                    /
+                    AREA_DURATION;
+
+
+                progressBar.style.width =
+                    (
+                        areaProgress
+                        *
+                        100
+                    )
+                    +
+                    "%";
+
+            }
+
+
+            animationFrameId =
+                requestAnimationFrame(
+                    gameLoop
+                );
+
+        }
+
+
+
+        /* =====================================================
+           GAME START / RESTART
+           ===================================================== */
+
+        function clearObstacles() {
+
+            obstacles.forEach(
+                function (obstacle) {
+
+                    obstacle.element.remove();
+
+                }
+            );
+
+
+            obstacles =
+                [];
+
+        }
+
+
+        function startGame() {
+
+            gameMode =
+                "story";
+            setArea(
+                1,
+                false,
+                false
+            );
+
+            gameDestination.textContent =
+                "SACRO";
+            clearObstacles();
+            soundObstacleCooldown = 0;
+            resetRocketSystem();
+
+            gameOverSubtitle.textContent =
+                "DAS WAR UNGESCHICKT.";
+            gameOver.classList.remove(
+                "visible"
+            );
+
+
+            gameFade.classList.remove(
+                "visible"
+            );
+
+
+            road.classList.remove(
+                "paused"
+            );
+
+
+            playerCar.classList.remove(
+                "crashed"
+            );
+
+
+            currentLane =
+                1;
+
+
+            updatePlayerPosition();
+
+
+            progressBar.style.width =
+                "0%";
+
+
+            timerText.textContent =
+                "35 SEK.";
+
+
+            gameStatus.textContent =
+                "MÜNSTER";
+
+
+            gameRunning =
+                true;
+
+
+            gameStartTime =
+                performance.now();
+
+
+            previousFrameTime =
+                gameStartTime;
+
+
+            lastSpawnTime =
+                gameStartTime;
+
+
+            nextSpawnDelay =
+                700;
+
+
+            animationFrameId =
+                requestAnimationFrame(
+                    gameLoop
+                );
+
+        }
+
+        function startEndlessGame() {
+
+            gameMode =
+                "endless";
+
+            setArea(
+                1,
+                true,
+                false
+            );
+
+
+            clearObstacles();
+
+            soundObstacleCooldown =
+                0;
+
+            resetRocketSystem();
+
+
+            gameOver.classList.remove(
+                "visible"
+            );
+
+
+            gameFade.classList.remove(
+                "visible"
+            );
+
+
+            road.classList.remove(
+                "paused"
+            );
+
+
+            playerCar.classList.remove(
+                "crashed"
+            );
+
+
+            currentLane =
+                1;
+
+
+            updatePlayerPosition();
+
+
+            /*
+                Endless hat keinen Fortschrittsbalken.
+            */
+
+            progressBar.style.width =
+                "0%";
+
+
+            timerText.textContent =
+                "0 PUNKTE";
+
+
+            endlessScore =
+                0;
+
+
+            gameRunning =
+                true;
+
+
+            gameStartTime =
+                performance.now();
+
+
+            previousFrameTime =
+                gameStartTime;
+
+
+            lastSpawnTime =
+                gameStartTime;
+
+
+            nextSpawnDelay =
+                700;
+
+
+
+            animationFrameId =
+                requestAnimationFrame(
+                    gameLoop
+                );
+
+        }
+
+        restartButton.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    gameMode
+                    ===
+                    "endless"
+                ) {
+
+                    startEndlessGame();
+
+                }
+
+                else {
+
+                    startGame();
+
+                }
+
+            }
+        );
+
+        rocketButton.addEventListener(
+            "pointerdown",
+            function (event) {
+
+                event.preventDefault();
+
+                fireRocket();
+
+            }
+        );
+
+
+
+        /* =====================================================
+           SPIEL GESCHAFFT
+           ===================================================== */
+
+        function finishGame() {
+
+            gameRunning =
+                false;
+
+            removeActiveRocket();
+
+
+            if (animationFrameId) {
+
+                cancelAnimationFrame(
+                    animationFrameId
+                );
+
+            }
+
+
+            progressBar.style.width =
+                "100%";
+
+
+            timerText.textContent =
+                "0 SEK.";
+
+
+            gameStatus.textContent =
+                "SACRO ERREICHT";
+
+
+            setTimeout(
+                function () {
+
+                    gameFade.classList.add(
+                        "visible"
+                    );
+
+                },
+                400
+            );
+
+
+            setTimeout(
+                function () {
+
+                    showScene(
+                        sceneArrival
+                    );
+
+                    startArrival();
+
+
+                    /* Musik bei der Ankunft langsam ausblenden */
+
+                    fadeAudio(
+                        travelMusic,
+                        0,
+                        3500,
+                        true
+                    );
+
+                },
+                1400
+            );
+
+        }
+
+
+
+        /* =====================================================
+           SACRO-ANIMATION
+           ===================================================== */
+
+        const arrivalCar =
+            document.getElementById(
+                "arrival-car"
+            );
+
+        const arrivalDriverHead =
+            document.getElementById(
+                "arrival-driver-head"
+            );
+
+        const arrivalJonathan =
+            document.getElementById(
+                "arrival-jonathan"
+            );
+
+        const arrivalSpeech =
+            document.getElementById(
+                "arrival-speech"
+            );
+
+        const partyButton =
+            document.getElementById(
+                "party-button"
+            );
+
+        const continueButton =
+            document.getElementById(
+                "continue-button"
+            );
+
+
+
+        function startArrival() {
+
+            /*
+                Alles zurücksetzen,
+                falls wir später mal erneut starten.
+            */
+
+            arrivalCar.classList.remove(
+                "arrive"
+            );
+
+            arrivalJonathan.classList.remove(
+                "visible"
+            );
+
+            arrivalJonathan.classList.remove(
+                "walk-house"
+            );
+
+            arrivalSpeech.classList.remove(
+                "visible"
+            );
+
+            partyButton.classList.remove(
+                "visible"
+            );
+
+            arrivalDriverHead.style.display =
+                "block";
+
+
+            /*
+                Browser zwingt Animation neu zu starten.
+            */
+
+            void arrivalCar.offsetWidth;
+
+
+            /*
+                Auto fährt herein
+            */
+
+            arrivalCar.classList.add(
+                "arrive"
+            );
+
+            /*
+    Bremsgeräusch kurz bevor
+    das Auto zum Stehen kommt
+*/
+
+            setTimeout(
+                function () {
+
+                    carBrakingSound.currentTime =
+                        0;
+
+                    carBrakingSound.play()
+                        .catch(function () { });
+
+                },
+                1600
+            );
+
+
+            /*
+                Jonathan steigt aus
+            */
+
+            setTimeout(
+                function () {
+
+                    arrivalDriverHead.style.display =
+                        "none";
+
+
+                    arrivalJonathan.classList.add(
+                        "visible"
+                    );
+
+                },
+                2200
+            );
+
+
+            /*
+                Jonathan läuft Richtung Haus
+            */
+
+            setTimeout(
+                function () {
+
+                    arrivalJonathan.classList.add(
+                        "walk-house"
+                    );
+
+                },
+                2500
+            );
+
+
+            /*
+                Text + Audio
+            */
+
+            setTimeout(
+                function () {
+
+                    arrivalSpeech.classList.add(
+                        "visible"
+                    );
+
+
+                    arrivalVoice.currentTime = 0;
+
+                    arrivalVoice.play()
+                        .catch(function () { });
+
+                },
+                4700
+            );
+
+
+            /*
+                Button erscheint
+            */
+
+            setTimeout(
+                function () {
+
+                    partyButton.classList.add(
+                        "visible"
+                    );
+
+                },
+                5600
+            );
+
+        }
+
+
+
+        /* =====================================================
+           EINLADUNG
+           ===================================================== */
+
+        partyButton.addEventListener(
+            "click",
+            function () {
+
+                showScene(
+                    sceneInvitation
+                );
+
+            }
+        );
+
+        continueButton.addEventListener(
+            "click",
+            function () {
+
+                showScene(
+                    sceneGame
+                );
+
+                startEndlessGame();
+
+            }
+        );
+
+
+    </script>
+
+</body>
+</html>
