@@ -1821,6 +1821,9 @@
             handpuppe:
                 new Audio("handpuppe.mp3"),
 
+            steveirwin:
+                new Audio("steveirwin.mp3"),
+
         };
 
 
@@ -2602,6 +2605,8 @@ RAKETEN-SYSTEM
             },
 
 
+
+
             /* =============================
                OHNE SOUND
                ============================= */
@@ -2634,6 +2639,24 @@ RAKETEN-SYSTEM
             }
 
         ];
+
+        const steveIrwinObstacle = {
+
+            name: "steveirwin",
+
+            image: "Steve Irwin.png",
+
+            sound: "steveirwin",
+
+            width: 120,
+
+            height: 120
+
+        };
+
+
+        const STEVE_IRWIN_CHANCE =
+            0.01;
 
         /*
 Nach einem Sound-Hindernis
@@ -2721,6 +2744,42 @@ muss mindestens EIN stummes Hindernis kommen.
 
             const obstaclePool =
                 getCurrentObstaclePool();
+
+
+            /*
+                STEVE-IRWIN-EASTER-EGG
+        
+                Nur Endless
+                Nur Area 3, 4 oder 5
+                Nur wenn gerade kein Sound-Cooldown läuft
+                1 % Chance pro Spawn
+            */
+
+            const steveCanSpawn =
+                gameMode === "endless"
+                &&
+                currentArea >= 3
+                &&
+                soundObstacleCooldown === 0
+                &&
+                Math.random() < STEVE_IRWIN_CHANCE;
+
+
+            if (steveCanSpawn) {
+
+                /*
+                    Steve hat Sound.
+                    Deshalb muss danach mindestens
+                    ein stummes Hindernis kommen.
+                */
+
+                soundObstacleCooldown =
+                    1;
+
+                return steveIrwinObstacle;
+
+            }
+
 
             let availableObstacles;
 
