@@ -509,6 +509,15 @@
             #game-road.area-3 {
                 filter: sepia(0.95) saturate(3.2) hue-rotate(65deg) brightness(0.9) contrast(1.12);
             }
+            /* AREA 4 – rot / aggressiv */
+            #game-road.area-4 {
+                filter: sepia(1) saturate(4.5) hue-rotate(325deg) brightness(0.86) contrast(1.18);
+            }
+
+            /* AREA 5 – zurück zur Realität, aber Hölle */
+            #game-road.area-5 {
+                filter: none;
+            }
 
         .lane-line {
             position: absolute;
@@ -764,9 +773,12 @@
         #highscore-list {
             border-top: 1px solid #555;
             padding-top: 7px;
+            padding-right: 5px;
             font-size: 13px;
             line-height: 1.5;
             color: #ccc;
+            max-height: 230px;
+            overflow-y: auto;
         }
 
         .highscore-row {
@@ -1287,6 +1299,23 @@
                     transform: translateX(48px) translateY(-8px) scale(0.38) rotate(0deg);
                     opacity: 0;
                 }
+            }
+
+            #highscore-list {
+                max-height: 170px;
+                font-size: 12px;
+            }
+
+            #highscore-box {
+                margin-bottom: 10px;
+            }
+
+            #game-over-title {
+                margin-bottom: 8px;
+            }
+
+            #game-over-subtitle {
+                margin-bottom: 12px;
             }
         }
     </style>
@@ -2221,6 +2250,12 @@
         const AREA3_SPEED_MULTIPLIER =
             1.35;
 
+        const AREA4_SPEED_MULTIPLIER =
+            1.60;
+
+        const AREA5_SPEED_MULTIPLIER =
+            2.00;
+
         let currentArea =
             1;
 
@@ -2347,13 +2382,11 @@ RAKETEN-SYSTEM
                 }
 
                 if (
-                    event.key
-                    ===
-                    "ArrowDown"
+                    event.key === "ArrowDown"
                     ||
-                    event.key.toLowerCase()
-                    ===
-                    "s"
+                    event.key.toLowerCase() === "s"
+                    ||
+                    event.code === "Space"
                 ) {
 
                     event.preventDefault();
@@ -2664,7 +2697,11 @@ muss mindestens EIN stummes Hindernis kommen.
             if (
                 gameMode === "endless"
                 &&
-                currentArea === 2
+                (
+                    currentArea === 2
+                    ||
+                    currentArea === 4
+                )
             ) {
 
                 return area2ObstacleTypes;
@@ -3504,7 +3541,7 @@ RAKETE ABSCHIESSEN
                             ascending: false
                         }
                     )
-                    .limit(5);
+                    .limit(15);
 
 
             if (error) {
@@ -3818,17 +3855,24 @@ AREA SYSTEM
         function getAreaSpeedMultiplier() {
 
             if (
-                gameMode === "endless"
-                &&
-                currentArea === 3
+                gameMode !== "endless"
             ) {
+                return 1;
+            }
 
+            if (currentArea === 3) {
                 return AREA3_SPEED_MULTIPLIER;
+            }
 
+            if (currentArea === 4) {
+                return AREA4_SPEED_MULTIPLIER;
+            }
+
+            if (currentArea === 5) {
+                return AREA5_SPEED_MULTIPLIER;
             }
 
             return 1;
-
         }
 
         function getRoadSpeedMultiplier() {
@@ -3852,7 +3896,11 @@ AREA SYSTEM
         function playAreaMusic(area) {
 
             const targetMusic =
-                area === 2
+                (
+                    area === 2
+                    ||
+                    area === 4
+                )
                     ? area2Music
                     : travelMusic;
 
@@ -3920,7 +3968,9 @@ AREA SYSTEM
             road.classList.remove(
                 "area-1",
                 "area-2",
-                "area-3"
+                "area-3",
+                "area-4",
+                "area-5"
             );
 
 
@@ -4263,36 +4313,11 @@ AUTOKOLLISION
                     );
 
 
-                let targetArea;
-
-
-                /*
-                    Erste zwei Minuten:
-                    AREA 1
-                */
-
-                if (
-                    areaStage === 0
-                ) {
-
-                    targetArea =
-                        1;
-
-                }
-
-                /*
-                    Danach:
-                    AREA 2 → AREA 3 → AREA 2 → AREA 3...
-                */
-
-                else {
-
-                    targetArea =
-                        areaStage % 2 === 1
-                            ? 2
-                            : 3;
-
-                }
+                let targetArea =
+                    Math.min(
+                        areaStage + 1,
+                        5
+                    );
 
 
                 if (
@@ -4315,16 +4340,27 @@ AUTOKOLLISION
                    ZEIT BIS NÄCHSTE AREA
                    ============================= */
 
-                const areaElapsed =
-                    elapsed
-                    %
-                    AREA_DURATION;
+                let areaProgress;
 
+                if (
+                    currentArea === 5
+                ) {
 
-                const areaProgress =
-                    areaElapsed
-                    /
-                    AREA_DURATION;
+                    areaProgress =
+                        1;
+
+                } else {
+
+                    const areaElapsed =
+                        elapsed
+                        %
+                        AREA_DURATION;
+
+                    areaProgress =
+                        areaElapsed
+                        /
+                        AREA_DURATION;
+                }
 
 
                 progressBar.style.width =
