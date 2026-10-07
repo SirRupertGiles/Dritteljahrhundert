@@ -4074,6 +4074,49 @@ AREA SYSTEM
 
         }
 
+        function getNextSpawnDelay() {
+
+            if (
+                gameMode !== "endless"
+            ) {
+                return 700
+                    +
+                    Math.random() * 450;
+            }
+
+
+            if (currentArea === 3) {
+
+                return 500
+                    +
+                    Math.random() * 350;
+
+            }
+
+
+            if (currentArea === 4) {
+
+                return 400
+                    +
+                    Math.random() * 300;
+
+            }
+
+
+            if (currentArea === 5) {
+
+                return 280
+                    +
+                    Math.random() * 240;
+
+            }
+
+
+            return 700
+                +
+                Math.random() * 450;
+        }
+
         function gameLoop(
             currentTime
         ) {
@@ -4126,10 +4169,7 @@ AREA SYSTEM
 
 
                 nextSpawnDelay =
-                    700
-                    +
-                    Math.random()
-                    * 450;
+                    getNextSpawnDelay();
 
             }
 
